@@ -2,8 +2,8 @@ import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
 import connectDB from "./config/db.js";
-import router from "./routes/authRoutes.js";
-
+import authRouter from "./routes/authRoutes.js";
+import userRouter from "./routes/userRoutes.js"
 
 
 dotenv.config();
@@ -13,7 +13,8 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use("/",router)
+app.use("/",authRouter)
+app.use("/user/",userRouter)
 
 
 // Default Route
