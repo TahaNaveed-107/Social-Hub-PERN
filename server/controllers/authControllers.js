@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client"
 import dotenv from "dotenv"
 
 dotenv.config();
@@ -11,6 +11,12 @@ export const registerUser = async (req, res) => {
     try {
         
         const {name, email, password} = req.body;
+
+        if (!name || !email ||!password){
+            return res.status(400).json({
+                message: "All fields are required",
+            })
+        }
     
         const existingUser = await prisma.user.findUnique({where:{email: email}});
     
@@ -43,6 +49,12 @@ export const loginUser = async(req, res) => {
     try {
         const {email, password} = req.body;
 
+        if (!email ||!password){
+            return res.status(400).json({
+                message: "All fields are required",
+            })
+        }
+
         const existingUser = await prisma.user.findUnique({where: {email}});
         if (!existingUser) {
             return res.status(400).json({
@@ -61,7 +73,7 @@ export const loginUser = async(req, res) => {
             { expiresIn: "1h" }
         );
 
-        res.cookies("token", token , {
+        res.cookie("token", token , {
             httpOnly:true,
             secure: process.env.NODE_ENV || "production",
             sameSite: "strict",
