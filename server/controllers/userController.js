@@ -6,14 +6,14 @@ const prisma = new PrismaClient();
 export const updateUser = async (req, res) => {
 
     try {
-        const userId = req.userId;
+        const userId = req.token.userId;
         const {name, password} = req.body;
 
         const existingUser = await prisma.user.findUnique({where: {id: userId}});
 
         if (!existingUser){
             return res.status(400).json({
-                message: "user not found"
+                message: "User not logged in"
             })
         }
 
@@ -41,16 +41,17 @@ export const updateUser = async (req, res) => {
 }
 
 export const deleteUser = async (req, res) => {
-    const userId = req.userId;
+    console.log(req.token)
+    const email = req.token.email;
 
     try {
-        await prisma.user.delete({where: {id: userId}})
+        await prisma.user.delete({where: {email: email}})
         return res.status(200).json({
             message: "User deleted Successfully"
         })
     } catch (error) {
         return res.status(200).json({
-            message: "User deleted Successfully",
+            message: "Server Error",
             error: error.message
         }) 
     }

@@ -73,12 +73,12 @@ export const loginUser = async(req, res) => {
             { expiresIn: "1h" }
         );
 
-        res.cookie("token", token , {
-            httpOnly:true,
-            secure: process.env.NODE_ENV || "production",
+        res.cookie("token", token, {
+            httpOnly: true,  
+            secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge:  60*60*1000,  
-        })
+            maxAge: 60 * 60 * 1000,
+        });
         res.status(200).json({ message: "Login successful" });
     } catch (error) {
         console.error("Error in loginUser:", error);
@@ -87,11 +87,11 @@ export const loginUser = async(req, res) => {
 }
 
 export const logoutUser = (req, res) => {
-    res.cookie("auth_token", "", {
+    res.cookie("token", "", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 0, // Instantly expire the cookie
+        maxAge: 0, 
     });
 
     res.status(200).json({ message: "Logout successful" });
